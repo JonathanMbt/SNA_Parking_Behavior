@@ -10,6 +10,7 @@ import pandas as pd
 from commands import *
 
 all_hashtags = []
+hashtag_edges = []
 
 #reading the csv file containing all the tweets containing the #parking, #parkinglot, ...
 tweets = pd.read_csv("../resources/20K_parking_data.csv")
@@ -21,9 +22,12 @@ for tweet in tweets.iloc:
         #list all Hashtags/nodes
         hashtag_of_tweet = tweet['tweet_hashtags'].split(" ")
         all_hashtags.append(hashtag_of_tweet)
-
+        if len(hashtag_of_tweet) > 1:
+            hashtag_edges.append([(i, j) for i in hashtag_of_tweet for j in hashtag_of_tweet[hashtag_of_tweet.index(i):] if (i != j) ])
+        
 # flatten array i.e. [ [a, e, b], [c, d, e]] --> [a, e, b, c, d, e]
 all_hashtags = [hashtag for list_hashtag in all_hashtags for hashtag in list_hashtag]
+hashtag_edges = [hashtag for list_hashtag in hashtag_edges for hashtag in list_hashtag]
 # eliminate the duplicates in the list 
 all_hashtags = list(dict.fromkeys(all_hashtags))
 
@@ -36,8 +40,8 @@ G.add_nodes_from(all_hashtags[:node_number])
 # so we can easily see that the number of edge follow the following rule : nbr_node-1 + nbr_node-2 + ... + 1 + 0 = nbr_edge
 # which is a sum of consecutive number so we have finally (nbr_node-1 * nbr_node)/2
 edge_number = int((node_number*(node_number-1))/2)
-hashtag_edges = [(i, j) for i in all_hashtags[:node_number] for j in all_hashtags[:node_number][all_hashtags[:node_number].index(i):] if (i != j) ]
-G.add_edges_from(hashtag_edges)
+print(edge_number)
+G.add_edges_from(hashtag_edges[:edge_number])
 
 if not label_hashtag:
     G = nx.convert_node_labels_to_integers(G,first_label=1)
