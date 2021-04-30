@@ -8,9 +8,11 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import pandas as pd
 from commands import *
+from functions import get_n_nodes
 
+# contains all hashtag from csv file
 all_hashtags = []
-hashtag_edges = []
+
 
 #reading the csv file containing all the tweets containing the #parking, #parkinglot, ...
 tweets = pd.read_csv("../resources/20K_parking_data.csv")
@@ -22,26 +24,23 @@ for tweet in tweets.iloc:
         #list all Hashtags/nodes
         hashtag_of_tweet = tweet['tweet_hashtags'].split(" ")
         all_hashtags.append(hashtag_of_tweet)
-        if len(hashtag_of_tweet) > 1:
-            hashtag_edges.append([(i, j) for i in hashtag_of_tweet for j in hashtag_of_tweet[hashtag_of_tweet.index(i):] if (i != j) ])
-        
+        #if len(hashtag_of_tweet) > 1:
+        #    hashtag_edges.append([(i, j) for i in hashtag_of_tweet for j in hashtag_of_tweet[hashtag_of_tweet.index(i):] if (i != j) ])
+
+# part wich construct edges according to node_number
+graph_node_edge = get_n_nodes(all_hashtags, node_number)     
+
 # flatten array i.e. [ [a, e, b], [c, d, e]] --> [a, e, b, c, d, e]
-all_hashtags = [hashtag for list_hashtag in all_hashtags for hashtag in list_hashtag]
-hashtag_edges = [hashtag for list_hashtag in hashtag_edges for hashtag in list_hashtag]
+# contains hashtag and egdes according to node_number
+hashtag_nodes = [hashtag for list_hashtag in graph_node_edge[0] for hashtag in list_hashtag]
+hashtag_edges = [hashtag for list_hashtag in graph_node_edge[1] for hashtag in list_hashtag]
+
 # eliminate the duplicates in the list 
-all_hashtags = list(dict.fromkeys(all_hashtags))
+hashtag_nodes = list(dict.fromkeys(hashtag_nodes))
 
 G = nx.Graph()
-G.add_nodes_from(all_hashtags[:node_number])
-
-# sum of consecutive number : 1+2+3+4+...+n --> n(n+1)/2
-# if 3 nodes [A, B, C], we have the following edges [(A, B), (A, C), (B, C)]
-# 2 (A can make 2 unique edges) + 1 (B can make 1 unique edge) + 0 (C can make 0 unique edge) = 3
-# so we can easily see that the number of edge follow the following rule : nbr_node-1 + nbr_node-2 + ... + 1 + 0 = nbr_edge
-# which is a sum of consecutive number so we have finally (nbr_node-1 * nbr_node)/2
-edge_number = int((node_number*(node_number-1))/2)
-print(edge_number)
-G.add_edges_from(hashtag_edges[:edge_number])
+G.add_nodes_from(hashtag_nodes)
+G.add_edges_from(hashtag_edges)
 
 if not label_hashtag:
     G = nx.convert_node_labels_to_integers(G,first_label=1)
