@@ -1,6 +1,9 @@
-from collections import Counter
+import operator
 
 def get_n_nodes(arr, n):
+    """
+        Return n nodes and all the corresponding edges.
+    """
     hashtag_nodes = []
     hashtag_edges = []
     nbr_nodes = 0
@@ -26,3 +29,12 @@ def get_n_nodes(arr, n):
                 hashtag_edges[len(hashtag_nodes)-1] = [(i, j) for n, i in enumerate(hashtags[:-diff]) for j in hashtags[:-diff][n+1:]]
                 nbr_nodes += len(hashtags[:-diff])
     return [hashtag_nodes, hashtag_edges]
+
+def maxN(arr, n):
+    """
+        Return the top-n element in a list/dict
+    """
+    if type(arr) == list:
+        return sorted(arr, reverse=True)[:n]
+    else:
+        return dict(sorted(arr.items(), key=operator.itemgetter(1), reverse=True)[:n])

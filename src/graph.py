@@ -8,7 +8,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import pandas as pd
 from commands import *
-from functions import get_n_nodes
+from functions import *
 import statistics as st
 import pygraphviz
 import pandas as pd
@@ -56,14 +56,14 @@ if graph_image:
     graph = nx.drawing.nx_agraph.to_agraph(G)
     graph.graph_attr.update(nodesep=4)
     graph.draw(filename+".png", prog="fdp")
-    print("*** Graph exported as an image. ***")
+    print("\n *** Graph exported as an image. *** \n")
 
 # Computation Graph
 CG = nx.Graph()
 CG.add_nodes_from(hashtag_nodes)
 CG.add_edges_from(hashtag_edges)
 
-print("*** Global properties of Graph ***")
+print("\n *** Global properties of Graph *** \n")
 graph_data = {}
 graph_data['node_number'] = len(CG.nodes)
 print("Number of nodes: ", graph_data['node_number'])
@@ -99,8 +99,38 @@ for C in (CG.subgraph(c).copy() for c in nx.connected_components(CG)):
     #print(nx.average_shortest_path_length(C))
     print("average_shortest_path_length: ", tmp) """
 
+# 5 highest ranked nodes according to several criterias
+print("\n *** Top 5 according to different criterias *** \n")
+hgr_nodes = {}
+hgr_nodes['degree_centrality'] = maxN(degree_centrality, 5)
+print("5 highest nodes based on degree centrality: ", hgr_nodes['degree_centrality'])
+pr_centrality = nx.pagerank(CG, alpha=0.95)
+hgr_nodes['page_rank_centrality'] = maxN(pr_centrality, 5)
+print("5 highest nodes based on page rank centrality: ", hgr_nodes['page_rank_centrality'])
+closeness_centrality = nx.closeness_centrality(CG)
+hgr_nodes['closeness_centrality'] = maxN(closeness_centrality, 5)
+print("5 highest nodes based on closeness centrality: ", hgr_nodes['closeness_centrality'])
+hgr_nodes['betweenness_centrality'] = maxN(betweenness_centrality, 5)
+print("5 highest nodes based on betweenness centrality: ", hgr_nodes['betweenness_centrality'])
+
+# Plot histogram of distributions 
+print("\n *** Distributions *** \n")
+fig, ax = plt.subplots(2, 2, figsize=(10,8))
+ax[0][0].hist(list(degree_centrality.values()), bins=int(node_number/2))
+ax[0][0].set_title("Distribution of the degree centrality")
+ax[0][1].hist(list(nx.clustering(CG).values()), bins=int(node_number/2))
+ax[0][1].set_title("Distribution of the local clustering coefficient")
+ax[1][0].hist(list(betweenness_centrality.values()), bins=int(node_number/2))
+ax[1][0].set_title("Distribution of the betweenness centrality")
+ax[1][1].hist(list(closeness_centrality.values()), bins=int(node_number/2))
+ax[1][1].set_title("Distribution of the closeness centrality")
+plt.show()
+
+
 if not not_displayed:
     plt.plot()
     pos = nx.drawing.nx_pydot.graphviz_layout(G, 'fdp')
     nx.draw(G, pos=pos, with_labels=True)
     plt.show()
+
+print("\n")
