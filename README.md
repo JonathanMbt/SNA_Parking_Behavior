@@ -6,3 +6,6 @@ Script used in the Social Network Analysis course (Parking behavior Analysis, Pr
 
 #### Help commands 
 `python script_name --help`
+
+### Dependencies
+ * GraphViz: used to render graphs as PDF, PNG, SVG, etc. Should be installed separately, using your system's package manager, something similar (e.g., MacPorts), or from its source.

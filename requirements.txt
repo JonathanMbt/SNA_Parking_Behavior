@@ -2,3 +2,4 @@ networkx
 tweepy
 pandas
 matplotlib
+pygraphviz
