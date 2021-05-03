@@ -12,6 +12,7 @@ from functions import *
 import statistics as st
 import pygraphviz
 import pandas as pd
+from itertools import chain
 
 # contains all hashtag from csv file
 all_hashtags = []
@@ -87,19 +88,34 @@ if graph_properties:
     print("Clustering Coefficient:", graph_data['clustering_coefficient'])
     graph_data['size_lg_component'] = len(max(components, key=len))
     print("Size of largest component: ", graph_data['size_lg_component'])
+
+    graph_data['avg_shortest_path_len'] = ""
+    graph_data['variance_shortest_path_len'] = ""
+    for C in (CG.subgraph(c).copy() for c in nx.connected_components(CG)):
+        tmp = nx.average_shortest_path_length(C)
+        path_length = (x.values() for x in dict(nx.shortest_path_length(C)).values())
+        graph_data['avg_shortest_path_len'] += str(tmp) + "/"
+        path_length = list(chain.from_iterable(path_length))
+        if len(path_length) > 1:
+            graph_data['variance_shortest_path_len'] += str(st.variance(path_length[k] for k in path_length)) + "/"
+        else:
+            graph_data['variance_shortest_path_len'] += "0/"
+        print("Average shortest path length: ", graph_data['avg_shortest_path_len'])
+        print("Variance shortest path length: ", graph_data['variance_shortest_path_len'])
     
     graph_properties_db = pd.DataFrame(graph_data, index=[0])
     graph_properties_db.to_csv("graph_properties.csv")
     
-    """ from itertools import chain
+    graph_data['avg_shortest_path_len'] = []
     for C in (CG.subgraph(c).copy() for c in nx.connected_components(CG)):
         path_lengths = (x.values() for x in dict(nx.shortest_path_length(C)).values())
-        print(path_lengths)
         tmp = sum(chain.from_iterable(path_lengths))
         tmp /= graph_data['node_number']*(graph_data['node_number']-1)
-        #print(nx.average_shortest_path_length(C))
-        print("average_shortest_path_length: ", tmp) """
+        print(nx.average_shortest_path_length(C))
+        print("average_shortest_path_length: ", tmp)
     
+
+
     # 5 highest ranked nodes according to several criterias
     print("\n *** Top 5 according to different criterias *** \n")
     hgr_nodes = {}
