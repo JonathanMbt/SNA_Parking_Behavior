@@ -106,15 +106,6 @@ if graph_properties:
     graph_properties_db = pd.DataFrame(graph_data, index=[0])
     graph_properties_db.to_csv("graph_properties.csv")
     
-    graph_data['avg_shortest_path_len'] = []
-    for C in (CG.subgraph(c).copy() for c in nx.connected_components(CG)):
-        path_lengths = (x.values() for x in dict(nx.shortest_path_length(C)).values())
-        tmp = sum(chain.from_iterable(path_lengths))
-        tmp /= graph_data['node_number']*(graph_data['node_number']-1)
-        print(nx.average_shortest_path_length(C))
-        print("average_shortest_path_length: ", tmp)
-    
-
 
     # 5 highest ranked nodes according to several criterias
     print("\n *** Top 5 according to different criterias *** \n")
