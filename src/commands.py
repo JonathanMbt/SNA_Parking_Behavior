@@ -1,5 +1,7 @@
 import sys
 
+data_filename = "../resources/20K_parking_data.csv"
+
 if sys.argv[0] == "graph.py":
     # init parameters default values
     node_number = 7
@@ -7,6 +9,7 @@ if sys.argv[0] == "graph.py":
     filename = "output_graph.png"
     graph_image = False
     not_displayed = False
+    graph_properties = False
 
 
     for arg in sys.argv[1:]:
@@ -16,11 +19,15 @@ if sys.argv[0] == "graph.py":
     -n (int) : define the number of nodes to display. 
         Default : 7 \n
     -l : Display graph with hashtag name as labels. 
-        Default : False \n
+        \n
     -i (filename) : Export graph as a png file (! VERY SLOW FOR LARGE GRAPH !) 
         Default filename : output_graph.png \n
     -nd : Graph is not displayed. 
-        Default : False
+        \n
+    -p : Calculate basics graph properties 
+        \n
+    -f (filename) : Use data from the specified filename. Only csv files are supported. 
+        Check github to get the valid csv format. \n
                 ''')
                 exit()
             if arg == "-n": 
@@ -32,3 +39,19 @@ if sys.argv[0] == "graph.py":
                 graph_image = True
             elif arg == "-nd":
                 not_displayed = True
+            elif arg == "-p":
+                graph_properties = True
+            elif arg == "-f":
+                data_filename = str(sys.argv[sys.argv.index(arg)+1])
+
+elif sys.argv[0] == "botometerTopTen.py":
+    for arg in sys.argv[1:]:
+        if "-" in arg:
+            if arg == "--help":
+                print(''' 
+    -f (filename) : Use data from the specified filename. Only csv files are supported. 
+        Check github to get the valid csv format. \n
+                ''')
+                exit()
+            elif arg == "-f":
+                data_filename = str(sys.argv[sys.argv.index(arg)+1])

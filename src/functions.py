@@ -1,4 +1,5 @@
 import operator
+import pandas as pd
 
 def get_n_nodes(arr, n):
     """
@@ -38,3 +39,33 @@ def maxN(arr, n):
         return sorted(arr, reverse=True)[:n]
     else:
         return dict(sorted(arr.items(), key=operator.itemgetter(1), reverse=True)[:n])
+
+def getTopTen(hashtag, top, csv_file, file_output = False):
+
+    df=pd.read_csv(csv_file)
+
+    allHashtags = df['tweet_hashtags'].tolist()
+    allUserId = df['user_id'].tolist()
+    allDateTime = df['time'].tolist()
+    allInfluencers = {}
+
+    topTenInfluencers = []
+
+    for i in range(int(len(allHashtags))):  
+    	try:
+    		if hashtag+" " in allHashtags[i].lower():
+    			if allUserId[i] in allInfluencers:
+    				allInfluencers[allUserId[i]] += 1
+    			else:
+    				allInfluencers[allUserId[i]] = 1
+    	#This happens when there is no hashtags
+    	except AttributeError:
+    		continue
+    if file_output:      
+        for i in range(0, top):
+            currentTop = max(allInfluencers, key=allInfluencers.get)
+            topTenInfluencers.append(str(i+1)+ '. ' + str(currentTop) + ' - ' + str(allInfluencers[currentTop]) + '\n')
+            allInfluencers.pop(currentTop)  
+        return topTenInfluencers
+    else:
+        return maxN(allInfluencers, top)  
