@@ -91,7 +91,7 @@ if graph_properties:
 
     graph_data['avg_shortest_path_len'] = ""
     graph_data['variance_shortest_path_len'] = ""
-    for C in (CG.subgraph(c).copy() for c in nx.connected_components(CG)):
+    for C in (CG.subgraph(c).copy() for c in components):
         tmp = nx.average_shortest_path_length(C)
         path_length = (x.values() for x in dict(nx.shortest_path_length(C)).values())
         graph_data['avg_shortest_path_len'] += str(tmp) + "/"
