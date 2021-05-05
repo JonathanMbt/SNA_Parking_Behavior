@@ -11,7 +11,6 @@ from commands import *
 from functions import *
 import statistics as st
 import pygraphviz
-import pandas as pd
 from itertools import chain
 
 # contains all hashtag from csv file
