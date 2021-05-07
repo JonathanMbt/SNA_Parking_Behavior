@@ -69,3 +69,27 @@ def getTopTen(hashtag, top, csv_file, file_output = False):
         return topTenInfluencers
     else:
         return maxN(allInfluencers, top)  
+
+def getTweets(hashtag, csv_file):
+    
+    df=pd.read_csv(csv_file)
+
+    allHashtags = df['tweet_hashtags'].tolist()
+    allUserId = df['user_id'].tolist()
+    allDateTime = df['time'].tolist()
+    allInfluencers = {}
+
+    topTenInfluencers = []
+
+    for i in range(int(len(allHashtags))):  
+    	try:
+    		if hashtag+" " in allHashtags[i].lower():
+    			if allUserId[i] in allInfluencers:
+    				allInfluencers[allUserId[i]] += 1
+    			else:
+    				allInfluencers[allUserId[i]] = 1
+    	#This happens when there is no hashtags
+    	except AttributeError:
+    		continue
+    
+    return allInfluencers
