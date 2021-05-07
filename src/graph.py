@@ -13,6 +13,7 @@ import statistics as st
 import pygraphviz
 from itertools import chain
 import botometerTopTen as btt
+import expression as exp
 
 # contains all hashtag from csv file
 all_hashtags = []
@@ -125,6 +126,9 @@ if graph_properties:
     if botoMeter: 
         print("\n *** Botometer ***\n")
         hashtags_botometer = maxN(degree_centrality, 10)
+        if expression:
+            exp.supportExpression(hashtags_botometer)
+            exit()
         btt.scrutinize(hashtags_botometer)
     
     # Plot histogram of distributions 

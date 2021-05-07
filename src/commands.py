@@ -11,7 +11,7 @@ if sys.argv[0] == "graph.py":
     not_displayed = False
     graph_properties = False
     botoMeter = False
-
+    expression = False
 
     for arg in sys.argv[1:]:
         if "-" in arg:
@@ -48,3 +48,5 @@ if sys.argv[0] == "graph.py":
                 data_filename = str(sys.argv[sys.argv.index(arg)+1])
             elif arg == "-b":
                 botoMeter = True
+            elif arg == "-e":
+                expression = True

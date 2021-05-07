@@ -93,3 +93,25 @@ def getTweets(hashtag, csv_file):
     		continue
     
     return allInfluencers
+
+
+def getTweet(hashtag, csv_file):
+    
+    df=pd.read_csv(csv_file)
+
+    allRetweets = df['retweets'].tolist()
+    allFavorites = df['favorites'].tolist()
+    allTweets = {}
+    totals = {}
+    totals["favorites"] = sum(allFavorites)
+    totals["retweets"] = sum(allRetweets)
+
+    for idx, tweet in enumerate(df.iloc):
+        try:
+            if hashtag in (tweet["tweet_hashtags"].split(" ")):
+                allTweets[idx] = {}
+                allTweets[idx]["favorites"] = allFavorites[idx] 
+                allTweets[idx]["retweets"] = allRetweets[idx]
+        except AttributeError:
+            pass
+    return [allTweets, totals] #e.g. [{"1": {"favorites":0, "retweets": 10}}, {"favorites": 28000, "retweets": 4000}]
