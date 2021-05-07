@@ -17,14 +17,13 @@ def scrutinize(hashtags):
     bom = botometer.Botometer(wait_on_ratelimit=True, rapidapi_key=rapidapi_key, **twitter_app_auth)
     users_botScore = {}
 
-    for hashtag in hashtags:
-
-        print("*** Please wait ! API QUERY could be a bit long. ***")
-        users_id = list(getTweets(hashtag, data_filename).keys())
+    for hashtag in hashtags: 
+        print(" *** Please wait ! API QUERY could be a bit long. ***")
+        users_id = list(getTweets(hashtag, data_filename).keys())[:25]
         users_botScore[hashtag] = {}
 
         query_answer = bom.check_accounts_in(users_id)
-        idx = 0
+        idx = 1
         for screen_name, result in query_answer:
             print("*** "+ str(idx) + "/"+ str(len(users_id)) + " ***")
             idx += 1
@@ -38,7 +37,7 @@ def scrutinize(hashtags):
         values = [nbr_bot/(len(users_id)), (len(users_id)-nbr_bot)/len(users_id)]
 
         fig, ax = plt.subplots(1, 2, figsize=(12,8))
-        fig.suptitle("Proportion of bots in the top 10 users for " + hashtag)
+        fig.suptitle("Proportion of bots in the top 25 users for " + hashtag)
         ax[0].hist(list(users_botScore[hashtag].values()))
         ax[1].pie(values, explode=[0.1, 0], labels=labels, autopct='%1.1f%%', shadow=True, startangle=90)
         ax[1].axis('equal')

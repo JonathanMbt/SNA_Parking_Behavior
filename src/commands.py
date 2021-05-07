@@ -10,6 +10,7 @@ if sys.argv[0] == "graph.py":
     graph_image = False
     not_displayed = False
     graph_properties = False
+    botoMeter = False
 
 
     for arg in sys.argv[1:]:
@@ -28,6 +29,8 @@ if sys.argv[0] == "graph.py":
         \n
     -f (filename) : Use data from the specified filename. Only csv files are supported. 
         Check github to get the valid csv format. \n
+    -b : Scrutinize top 25 users (tell the proportion of bot and human) for each hashtag in top 10 hastags in terms of degree centrality
+        \n
                 ''')
                 exit()
             if arg == "-n": 
@@ -43,15 +46,5 @@ if sys.argv[0] == "graph.py":
                 graph_properties = True
             elif arg == "-f":
                 data_filename = str(sys.argv[sys.argv.index(arg)+1])
-
-elif sys.argv[0] == "botometerTopTen.py":
-    for arg in sys.argv[1:]:
-        if "-" in arg:
-            if arg == "--help":
-                print(''' 
-    -f (filename) : Use data from the specified filename. Only csv files are supported. 
-        Check github to get the valid csv format. \n
-                ''')
-                exit()
-            elif arg == "-f":
-                data_filename = str(sys.argv[sys.argv.index(arg)+1])
+            elif arg == "-b":
+                botoMeter = True

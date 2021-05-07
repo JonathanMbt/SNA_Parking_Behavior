@@ -121,11 +121,11 @@ if graph_properties:
     hgr_nodes['betweenness_centrality'] = maxN(betweenness_centrality, 5)
     print("5 highest nodes based on betweenness centrality: ", hgr_nodes['betweenness_centrality'])
 
-    # Botometer 
-    hashtags_botometer = maxN(degree_centrality, 10)
-    print(list(hashtags_botometer.keys()))
-    print(btt.scrutinize(hashtags_botometer))
-    exit()
+    # Botometer
+    if botoMeter: 
+        print("\n *** Botometer ***\n")
+        hashtags_botometer = maxN(degree_centrality, 10)
+        btt.scrutinize(hashtags_botometer)
     
     # Plot histogram of distributions 
     print("\n *** Distributions *** \n")
