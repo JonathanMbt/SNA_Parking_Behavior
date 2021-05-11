@@ -12,6 +12,7 @@ if sys.argv[0] == "graph.py":
     graph_properties = False
     botoMeter = False
     expression = False
+    timeTracking = False
 
     for arg in sys.argv[1:]:
         if "-" in arg:
@@ -50,3 +51,5 @@ if sys.argv[0] == "graph.py":
                 botoMeter = True
             elif arg == "-e":
                 expression = True
+            elif arg == "-t":
+                timeTracking = True
