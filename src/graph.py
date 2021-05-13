@@ -65,7 +65,6 @@ if graph_image:
 CG = nx.Graph()
 CG.add_nodes_from(hashtag_nodes)
 CG.add_edges_from(hashtag_edges)
-CG.remove_node("#parkinglot")
 degree_centrality = nx.degree_centrality(CG)
 
 # Computation Graph
@@ -81,6 +80,11 @@ if graph_properties:
     print("Average degree centrality: ", graph_data['avg_degree_centrality'])
     graph_data['variance_degree_centrality'] = st.variance(degree_centrality[k] for k in degree_centrality)
     print("Variance degree centrality: ", graph_data['variance_degree_centrality'])
+    closeness_centrality = nx.closeness_centrality(CG)
+    graph_data['avg_closeness_centrality'] = st.mean(closeness_centrality[k] for k in closeness_centrality)
+    print("Average closeness centrality: ", graph_data['avg_closeness_centrality'])
+    graph_data['variance_closeness_centrality'] = st.variance(closeness_centrality[k] for k in closeness_centrality)
+    print("Variance closeness centrality: ", graph_data['variance_closeness_centrality'])
     betweenness_centrality = nx.betweenness_centrality(CG) 
     graph_data['avg_betweenness_centrality'] = st.mean(betweenness_centrality[k] for k in betweenness_centrality)
     print("Average betweenness centrality: ", graph_data['avg_betweenness_centrality'])
@@ -120,7 +124,6 @@ if graph_properties:
     pr_centrality = nx.pagerank(CG, alpha=0.95)
     hgr_nodes['page_rank_centrality'] = maxN(pr_centrality, 5)
     print("5 highest nodes based on page rank centrality: ", hgr_nodes['page_rank_centrality'])
-    closeness_centrality = nx.closeness_centrality(CG)
     hgr_nodes['closeness_centrality'] = maxN(closeness_centrality, 5)
     print("5 highest nodes based on closeness centrality: ", hgr_nodes['closeness_centrality'])
     hgr_nodes['betweenness_centrality'] = maxN(betweenness_centrality, 5)
@@ -188,19 +191,15 @@ if timeTracking:
             treshold = startDate + delta[de]
             tmp = max(dt for dt in allTimestamp if dt <= treshold)
             index = allTimestamp.index(tmp) 
-            occurences[de] = dict(Counter([hashtag for list_hashtag in allHash[:index+1] for hashtag in list_hashtag]))
+            occurences[de] = dict(Counter([hashtag for list_hashtag in allHash[index:] for hashtag in list_hashtag]))
 
-        #fig, ax = plt.subplots(2, 2, figsize=(12,8))
-        plt.figure(figsize=(12,8))
-        #ax[0][0].bar(list(occurences["1 day"].keys()), list(occurences["1 day"].values()))
-        plt.barh(list(occurences["1 day"].keys()), list(occurences["1 day"].values()), zorder=2)
-        plt.xlabel("Number of tweets", labelpad=20)
-        plt.ylabel("Hashtags", labelpad=50)
-        #plt.bar(["A", "B", "C"], [1, 2, 3])
-        plt.xticks(rotation='vertical')
-        #ax[0][0].set_title("Number of tweets for each # during 1 day, beginning at: " + startDate.strftime("%Y-%m-%d"))
-        plt.show()
-        exit()
+    plt.figure(figsize=(12,8))
+    occurences["All time"] = dict(sorted(occurences[de].items(), key=lambda item: item[1], reverse=True))
+    plt.barh(list(occurences["All time"].keys())[1:30], list(occurences["All time"].values())[1:30], zorder=2)
+    plt.xlabel("Number of tweets", labelpad=20)
+    plt.ylabel("Hashtags", labelpad=50)
+    plt.xticks(rotation='vertical')
+    plt.show()
 
     clusteringCoeffEvolution = {}
     days = 0
